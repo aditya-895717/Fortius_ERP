@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Employees{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item">HR</li><li class="breadcrumb-item active">Employees</li>{% endblock %}
+{% block content %}
+<div class="page-header"><h1><i class="bi bi-person-badge me-2"></i>Employee Directory</h1></div>
+<div class="filter-bar">
+    <form method="get" class="row g-2">
+        <div class="col-md-3"><input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search employees..."></div>
+        <div class="col-md-3"><select name="department" class="form-select"><option value="">All Departments</option>{% for d in departments %}<option value="{{ d.id }}" {% if dept_filter == d.id|stringformat:"d" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+        <div class="col-md-2"><select name="status" class="form-select"><option value="">All Status</option><option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option><option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option><option value="on_leave" {% if status_filter == 'on_leave' %}selected{% endif %}>On Leave</option></select></div>
+        <div class="col-md-2"><button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+        <div class="col-md-2"><a href="{% url 'hr:employee_list' %}" class="btn btn-light w-100">Reset</a></div>
+    </form>
+</div>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for emp in employees %}
+<tr>
+    <td>{{ emp.employee_id|default:"—" }}</td>
+    <td>{{ emp.user.get_full_name|default:emp.user.username }}</td>
+    <td>{{ emp.department|default:"—" }}</td>
+    <td>{{ emp.designation|default:"—" }}</td>
+    <td><span class="badge-status badge-{{ emp.status }}">{{ emp.get_status_display }}</span></td>
+    <td><a href="{% url 'hr:employee_detail' emp.pk %}" class="btn btn-sm btn-light"><i class="bi bi-eye"></i></a></td>
+</tr>
+{% empty %}<tr><td colspan="6"><div class="empty-state"><i class="bi bi-person-badge"></i><h5>No employees found</h5></div></td></tr>
+{% endfor %}
+</tbody></table></div>
+{% if employees.has_other_pages %}<div class="p-3">{% include 'partials/_pagination.html' with page_obj=employees %}</div>{% endif %}
+</div>
+{% endblock %}

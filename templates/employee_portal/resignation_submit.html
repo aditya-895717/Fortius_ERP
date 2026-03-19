@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Submit Resignation | ERP{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Submit Resignation</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        Please note that submitting this form will initiate your official exit process.
+                        Once approved by HR, your notice period will commence.
+                    </p>
+                    <hr>
+                    <form method="post" action="{% url 'employee_portal:resignation_submit' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Proposed Resignation Date (Today or earlier)</label>
+                            {{ form.resignation_date }}
+                            {% if form.resignation_date.errors %}
+                                <div class="text-danger small">{{ form.resignation_date.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Reason for Resignation</label>
+                            {{ form.reason }}
+                            {% if form.reason.errors %}
+                                <div class="text-danger small">{{ form.reason.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Comments / Additional Information</label>
+                            {{ form.comments }}
+                            {% if form.comments.errors %}
+                                <div class="text-danger small">{{ form.comments.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between alert alert-danger mb-0">
+                            <strong>Are you sure?</strong>
+                            <button type="submit" class="btn btn-danger btn-sm">Submit Resignation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

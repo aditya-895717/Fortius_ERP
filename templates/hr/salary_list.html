@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block title %}Payroll{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item">HR</li><li class="breadcrumb-item active">Payroll</li>{% endblock %}{% block content %}
+<div class="page-header"><h1><i class="bi bi-wallet2 me-2"></i>Salary Structures</h1><a href="{% url 'hr:salary_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add</a></div>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Employee</th><th>Basic</th><th>Gross</th><th>Deductions</th><th>Net</th><th>Actions</th></tr></thead><tbody>
+{% for s in salaries %}<tr><td>{{ s.employee.get_full_name }}</td><td>₹{{ s.basic_salary }}</td><td>₹{{ s.gross_salary }}</td><td>₹{{ s.total_deductions }}</td><td><strong>₹{{ s.net_salary }}</strong></td><td><a href="{% url 'hr:salary_detail' s.pk %}" class="btn btn-sm btn-light"><i class="bi bi-eye"></i></a><a href="{% url 'hr:salary_edit' s.pk %}" class="btn btn-sm btn-outline-primary ms-1"><i class="bi bi-pencil"></i></a></td></tr>
+{% empty %}<tr><td colspan="6"><div class="empty-state"><i class="bi bi-wallet2"></i><h5>No salary records</h5></div></td></tr>{% endfor %}
+</tbody></table></div></div>{% endblock %}

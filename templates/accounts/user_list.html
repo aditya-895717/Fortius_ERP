@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Manage Users{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item">Admin</li><li class="breadcrumb-item active">Users</li>{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-people me-2"></i>Manage Users</h1>
+    <a href="{% url 'accounts:user_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add User</a>
+</div>
+<div class="filter-bar">
+    <form method="get" class="row g-2 align-items-end">
+        <div class="col-md-3"><input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search users..."></div>
+        <div class="col-md-2"><select name="role" class="form-select"><option value="">All Roles</option>{% for r in roles %}<option value="{{ r.name }}" {% if role_filter == r.name %}selected{% endif %}>{{ r.get_name_display }}</option>{% endfor %}</select></div>
+        <div class="col-md-2"><select name="department" class="form-select"><option value="">All Depts</option>{% for d in departments %}<option value="{{ d.id }}" {% if dept_filter == d.id|stringformat:"d" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+        <div class="col-md-2"><select name="status" class="form-select"><option value="">All Status</option><option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option><option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option></select></div>
+        <div class="col-md-2"><button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+        <div class="col-md-1"><a href="{% url 'accounts:user_list' %}" class="btn btn-light w-100">Reset</a></div>
+    </form>
+</div>
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Employee ID</th><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.profile.employee_id|default:"—" }}</td>
+                <td><a href="{% url 'accounts:user_detail' u.pk %}">{{ u.get_full_name|default:u.username }}</a></td>
+                <td>{{ u.email|default:"—" }}</td>
+                <td>{% if u.profile.role %}<span class="badge-status badge-active">{{ u.profile.role.get_name_display }}</span>{% else %}—{% endif %}</td>
+                <td>{{ u.profile.department|default:"—" }}</td>
+                <td><span class="badge-status badge-{{ u.profile.status|default:'active' }}">{{ u.profile.get_status_display|default:"Active" }}</span></td>
+                <td>
+                    <a href="{% url 'accounts:user_edit' u.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'accounts:user_detail' u.pk %}" class="btn btn-sm btn-light"><i class="bi bi-eye"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7"><div class="empty-state"><i class="bi bi-people"></i><h5>No users found</h5><p>Try adjusting your filters</p></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if users.has_other_pages %}
+    <div class="p-3">{% include 'partials/_pagination.html' with page_obj=users %}</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+<!-- Sidebar Navigation - Role-based menu items -->
+<nav id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+        <span>ERP System</span>
+    </div>
+
+    <div class="sidebar-nav">
+        <!-- Dashboard -->
+        <a href="{% url 'core:dashboard' %}" class="sidebar-link">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+
+        {% if user_role == 'admin' or user.is_superuser %}
+        <!-- Admin Menu -->
+        <div class="sidebar-heading">Administration</div>
+        <a href="{% url 'accounts:user_list' %}" class="sidebar-link">
+            <i class="bi bi-people"></i> Manage Users
+        </a>
+        <a href="{% url 'accounts:department_list' %}" class="sidebar-link">
+            <i class="bi bi-building"></i> Departments
+        </a>
+        <a href="{% url 'core:activity_log' %}" class="sidebar-link">
+            <i class="bi bi-clock-history"></i> Activity Log
+        </a>
+
+        <!-- Admin can see HR -->
+        <div class="sidebar-heading">Human Resources</div>
+        <a href="{% url 'hr:employee_list' %}" class="sidebar-link">
+            <i class="bi bi-person-badge"></i> Employees
+        </a>
+        <a href="{% url 'hr:attendance_list' %}" class="sidebar-link">
+            <i class="bi bi-calendar-check"></i> Attendance
+        </a>
+        <a href="{% url 'hr:leave_list' %}" class="sidebar-link">
+            <i class="bi bi-calendar-x"></i> Leave Mgmt
+        </a>
+        <a href="{% url 'hr:salary_list' %}" class="sidebar-link">
+            <i class="bi bi-wallet2"></i> Payroll
+        </a>
+        <a href="{% url 'hr:job_opening_list' %}" class="sidebar-link">
+            <i class="bi bi-briefcase"></i> Recruitment
+        </a>
+        <a href="{% url 'hr:appraisal_list' %}" class="sidebar-link">
+            <i class="bi bi-star"></i> Performance
+        </a>
+        <a href="{% url 'hr:training_list' %}" class="sidebar-link">
+            <i class="bi bi-mortarboard"></i> Training
+        </a>
+        <a href="{% url 'hr:grievance_list' %}" class="sidebar-link">
+            <i class="bi bi-exclamation-triangle"></i> Grievances
+        </a>
+        <a href="{% url 'hr:exit_list' %}" class="sidebar-link">
+            <i class="bi bi-door-open"></i> Exit Mgmt
+        </a>
+
+        <!-- Admin can see TPM -->
+        <div class="sidebar-heading">Project Management</div>
+        <a href="{% url 'tpm:project_list' %}" class="sidebar-link">
+            <i class="bi bi-kanban"></i> Projects
+        </a>
+        <a href="{% url 'tpm:task_list' %}" class="sidebar-link">
+            <i class="bi bi-check2-square"></i> Tasks
+        </a>
+        <a href="{% url 'tpm:milestone_list' %}" class="sidebar-link">
+            <i class="bi bi-flag"></i> Milestones
+        </a>
+        <a href="{% url 'tpm:risk_list' %}" class="sidebar-link">
+            <i class="bi bi-shield-exclamation"></i> Risks
+        </a>
+        <a href="{% url 'tpm:issue_list' %}" class="sidebar-link">
+            <i class="bi bi-bug"></i> Issues
+        </a>
+        <a href="{% url 'tpm:meeting_list' %}" class="sidebar-link">
+            <i class="bi bi-camera-video"></i> Meetings
+        </a>
+        <a href="{% url 'tpm:note_list' %}" class="sidebar-link">
+            <i class="bi bi-journal-text"></i> Notes
+        </a>
+        {% endif %}
+
+        {% if user_role == 'hr' %}
+        <!-- HR Menu -->
+        <div class="sidebar-heading">Human Resources</div>
+        <a href="{% url 'hr:employee_list' %}" class="sidebar-link">
+            <i class="bi bi-person-badge"></i> Employees
+        </a>
+        <a href="{% url 'hr:attendance_list' %}" class="sidebar-link">
+            <i class="bi bi-calendar-check"></i> Attendance
+        </a>
+        <a href="{% url 'hr:leave_list' %}" class="sidebar-link">
+            <i class="bi bi-calendar-x"></i> Leave Mgmt
+        </a>
+        <a href="{% url 'hr:salary_list' %}" class="sidebar-link">
+            <i class="bi bi-wallet2"></i> Payroll
+        </a>
+        <a href="{% url 'hr:job_opening_list' %}" class="sidebar-link">
+            <i class="bi bi-briefcase"></i> Recruitment
+        </a>
+        <a href="{% url 'hr:candidate_list' %}" class="sidebar-link">
+            <i class="bi bi-person-lines-fill"></i> Candidates
+        </a>
+        <a href="{% url 'hr:appraisal_list' %}" class="sidebar-link">
+            <i class="bi bi-star"></i> Performance
+        </a>
+        <a href="{% url 'hr:training_list' %}" class="sidebar-link">
+            <i class="bi bi-mortarboard"></i> Training
+        </a>
+        <a href="{% url 'hr:grievance_list' %}" class="sidebar-link">
+            <i class="bi bi-exclamation-triangle"></i> Grievances
+        </a>
+        <a href="{% url 'hr:exit_list' %}" class="sidebar-link">
+            <i class="bi bi-door-open"></i> Exit Mgmt
+        </a>
+        {% endif %}
+
+        {% if user_role == 'tpm' %}
+        <!-- TPM Menu -->
+        <div class="sidebar-heading">Project Management</div>
+        <a href="{% url 'tpm:project_list' %}" class="sidebar-link">
+            <i class="bi bi-kanban"></i> Projects
+        </a>
+        <a href="{% url 'tpm:task_list' %}" class="sidebar-link">
+            <i class="bi bi-check2-square"></i> Tasks
+        </a>
+        <a href="{% url 'tpm:milestone_list' %}" class="sidebar-link">
+            <i class="bi bi-flag"></i> Milestones
+        </a>
+        <a href="{% url 'tpm:risk_list' %}" class="sidebar-link">
+            <i class="bi bi-shield-exclamation"></i> Risks
+        </a>
+        <a href="{% url 'tpm:issue_list' %}" class="sidebar-link">
+            <i class="bi bi-bug"></i> Issues
+        </a>
+        <a href="{% url 'tpm:meeting_list' %}" class="sidebar-link">
+            <i class="bi bi-camera-video"></i> Meetings
+        </a>
+        <a href="{% url 'tpm:note_list' %}" class="sidebar-link">
+            <i class="bi bi-journal-text"></i> Notes
+        </a>
+        {% endif %}
+
+        <!-- Common -->
+        <div class="sidebar-heading">Account</div>
+        <a href="{% url 'core:notifications' %}" class="sidebar-link">
+            <i class="bi bi-bell"></i> Notifications
+            {% if unread_notifications %}<span class="badge bg-danger ms-auto">{{ unread_notifications }}</span>{% endif %}
+        </a>
+        <a href="{% url 'accounts:profile' %}" class="sidebar-link">
+            <i class="bi bi-person-circle"></i> My Profile
+        </a>
+        <a href="{% url 'accounts:change_password' %}" class="sidebar-link">
+            <i class="bi bi-key"></i> Change Password
+        </a>
+        <a href="{% url 'accounts:logout' %}" class="sidebar-link">
+            <i class="bi bi-box-arrow-left"></i> Logout
+        </a>
+    </div>
+</nav>

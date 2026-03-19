@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Departments{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item">Admin</li><li class="breadcrumb-item active">Departments</li>{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-building me-2"></i>Departments</h1>
+    <a href="{% url 'accounts:department_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Department</a>
+</div>
+<div class="filter-bar">
+    <form method="get" class="row g-2">
+        <div class="col-md-4"><input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search departments..."></div>
+        <div class="col-md-2"><button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i>Search</button></div>
+    </form>
+</div>
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Code</th><th>Name</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for d in departments %}
+            <tr>
+                <td><strong>{{ d.code }}</strong></td>
+                <td>{{ d.name }}</td>
+                <td>{{ d.description|truncatewords:10|default:"—" }}</td>
+                <td>{% if d.is_active %}<span class="badge-status badge-active">Active</span>{% else %}<span class="badge-status badge-inactive">Inactive</span>{% endif %}</td>
+                <td><a href="{% url 'accounts:department_edit' d.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-building"></i><h5>No departments yet</h5></div></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

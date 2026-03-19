@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Leave Request{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'hr:leave_list' %}">Leave</a></li><li class="breadcrumb-item active">Detail</li>{% endblock %}
+{% block content %}
+<div class="page-header"><h1><i class="bi bi-calendar-x me-2"></i>Leave Request</h1></div>
+<div class="row g-4">
+    <div class="col-lg-6"><div class="detail-card">
+        <h5 class="mb-3">Leave Details</h5>
+        <div class="detail-row"><span class="detail-label">Employee</span><span class="detail-value">{{ leave.employee.get_full_name }}</span></div>
+        <div class="detail-row"><span class="detail-label">Leave Type</span><span class="detail-value">{{ leave.leave_type }}</span></div>
+        <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">{{ leave.start_date|date:"M d, Y" }}</span></div>
+        <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">{{ leave.end_date|date:"M d, Y" }}</span></div>
+        <div class="detail-row"><span class="detail-label">Days</span><span class="detail-value">{{ leave.total_days }}</span></div>
+        <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-value">{{ leave.reason }}</span></div>
+        <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ leave.status }}">{{ leave.get_status_display }}</span></span></div>
+        <div class="detail-row"><span class="detail-label">Applied On</span><span class="detail-value">{{ leave.applied_on|date:"M d, Y H:i" }}</span></div>
+        {% if leave.approved_by %}<div class="detail-row"><span class="detail-label">Processed By</span><span class="detail-value">{{ leave.approved_by.get_full_name }}</span></div>{% endif %}
+        {% if leave.rejection_reason %}<div class="detail-row"><span class="detail-label">Rejection Reason</span><span class="detail-value">{{ leave.rejection_reason }}</span></div>{% endif %}
+    </div></div>
+    {% if leave.status == 'pending' %}
+    <div class="col-lg-6"><div class="form-card">
+        <h5 class="mb-3">Take Action</h5>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3"><label class="form-label">Action</label>{{ action_form.action }}</div>
+            <div class="mb-3"><label class="form-label">Rejection Reason (if rejecting)</label>{{ action_form.rejection_reason }}</div>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Submit</button>
+        </form>
+    </div></div>
+    {% endif %}
+</div>
+{% endblock %}

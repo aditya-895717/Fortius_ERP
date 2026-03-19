@@ -1,0 +1,46 @@
+<!-- Top Navigation Bar -->
+<div class="top-navbar">
+    <div class="d-flex align-items-center gap-3">
+        <!-- Mobile sidebar toggle -->
+        <button id="sidebarToggle" class="btn btn-sm btn-light d-lg-none">
+            <i class="bi bi-list fs-5"></i>
+        </button>
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Home</a></li>
+                {% block breadcrumb %}{% endblock %}
+            </ol>
+        </nav>
+    </div>
+
+    <div class="navbar-actions">
+        <!-- Notifications -->
+        <a href="{% url 'core:notifications' %}" class="btn-icon" data-bs-toggle="tooltip" title="Notifications">
+            <i class="bi bi-bell"></i>
+            {% if unread_notifications %}
+                <span class="notification-badge">{{ unread_notifications }}</span>
+            {% endif %}
+        </a>
+
+        <!-- User Dropdown -->
+        <div class="dropdown">
+            <div class="user-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="avatar">
+                    {{ user.first_name|default:user.username|make_list|first|upper }}
+                </div>
+                <div class="d-none d-md-block">
+                    <div class="fw-semibold" style="font-size:0.85rem;">{{ user.get_full_name|default:user.username }}</div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);">{{ user_role_display|default:"User" }}</div>
+                </div>
+                <i class="bi bi-chevron-down" style="font-size:0.7rem;"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:change_password' %}"><i class="bi bi-key me-2"></i>Change Password</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

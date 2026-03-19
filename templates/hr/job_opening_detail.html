@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% block title %}{{ opening.title }}{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'hr:job_opening_list' %}">Job Openings</a></li><li class="breadcrumb-item active">{{ opening.title }}</li>{% endblock %}{% block content %}
+<div class="page-header"><h1>{{ opening.title }}</h1><a href="{% url 'hr:job_opening_edit' opening.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Edit</a></div>
+<div class="row g-4"><div class="col-lg-6"><div class="detail-card">
+<div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">{{ opening.department }}</span></div>
+<div class="detail-row"><span class="detail-label">Positions</span><span class="detail-value">{{ opening.positions }}</span></div>
+<div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">{{ opening.location|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Salary Range</span><span class="detail-value">{{ opening.salary_range|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Priority</span><span class="detail-value"><span class="badge-status badge-{{ opening.priority }}">{{ opening.get_priority_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ opening.status }}">{{ opening.get_status_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">{{ opening.description }}</span></div>
+</div></div>
+<div class="col-lg-6"><div class="table-card"><div class="card-header d-flex justify-content-between"><span>Candidates ({{ candidates.count }})</span><a href="{% url 'hr:candidate_create' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Add</a></div>
+<div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Exp</th><th>Status</th></tr></thead><tbody>
+{% for c in candidates %}<tr><td><a href="{% url 'hr:candidate_detail' c.pk %}">{{ c.first_name }} {{ c.last_name }}</a></td><td>{{ c.experience_years }}yr</td><td><span class="badge-status badge-{{ c.status }}">{{ c.get_status_display }}</span></td></tr>
+{% empty %}<tr><td colspan="3" class="text-center text-muted">No candidates</td></tr>{% endfor %}
+</tbody></table></div></div></div></div>{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block title %}{{ risk.title }}{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'tpm:risk_list' %}">Risks</a></li><li class="breadcrumb-item active">Detail</li>{% endblock %}{% block content %}
+<div class="page-header"><h1>Risk: {{ risk.title }}</h1><a href="{% url 'tpm:risk_edit' risk.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Edit</a></div>
+<div class="detail-card">
+<div class="detail-row"><span class="detail-label">Project</span><span class="detail-value"><a href="{% url 'tpm:project_detail' risk.project.pk %}">{{ risk.project }}</a></span></div>
+<div class="detail-row"><span class="detail-label">Severity</span><span class="detail-value"><span class="badge-status badge-{{ risk.severity }}">{{ risk.get_severity_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Owner</span><span class="detail-value">{{ risk.owner.get_full_name|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ risk.status }}">{{ risk.get_status_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">{{ risk.description }}</span></div>
+{% if risk.impact %}<div class="detail-row"><span class="detail-label">Impact</span><span class="detail-value">{{ risk.impact }}</span></div>{% endif %}
+{% if risk.mitigation_plan %}<div class="detail-row"><span class="detail-label">Mitigation Plan</span><span class="detail-value">{{ risk.mitigation_plan }}</span></div>{% endif %}
+</div>{% endblock %}

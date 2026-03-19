@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Profile</li>{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-person-circle me-2"></i>My Profile</h1>
+</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="detail-card text-center">
+            <div class="mb-3">
+                <div class="avatar mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;border-radius:50%;background:linear-gradient(135deg,#2d63e5,#6c3ce0);color:#fff;display:flex;align-items:center;justify-content:center;">
+                    {{ user.first_name|default:user.username|make_list|first|upper }}
+                </div>
+                <h4>{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted mb-1">{{ profile.designation|default:"—" }}</p>
+                {% if profile.role %}
+                <span class="badge-status badge-active">{{ profile.role.get_name_display }}</span>
+                {% endif %}
+            </div>
+            <hr>
+            <div class="text-start">
+                <div class="detail-row"><span class="detail-label">Employee ID</span><span class="detail-value">{{ profile.employee_id|default:"—" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">{{ profile.department|default:"—" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">{{ user.email|default:"—" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">{{ profile.phone|default:"—" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Joined</span><span class="detail-value">{{ profile.date_of_joining|default:"—" }}</span></div>
+                <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ profile.status }}">{{ profile.get_status_display }}</span></span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="form-card">
+            <h5 class="mb-3">Edit Profile</h5>
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" value="{{ user.last_name }}" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="form-control">
+                    </div>
+                    {% for field in form %}
+                    <div class="col-md-6">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

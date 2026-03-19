@@ -1,0 +1,37 @@
+{% extends 'base.html' %}{% block title %}{{ project.name }}{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'tpm:project_list' %}">Projects</a></li><li class="breadcrumb-item active">{{ project.project_code }}</li>{% endblock %}{% block content %}
+<div class="page-header"><h1>{{ project.project_code }} — {{ project.name }}</h1><a href="{% url 'tpm:project_edit' project.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Edit</a></div>
+<!-- Project Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="stat-card blue"><div class="d-flex justify-content-between"><div><div class="stat-value">{{ total_tasks }}</div><div class="stat-label">Total Tasks</div></div><div class="stat-icon bg-blue"><i class="bi bi-check2-square"></i></div></div></div></div>
+    <div class="col-md-3"><div class="stat-card green"><div class="d-flex justify-content-between"><div><div class="stat-value">{{ completed_tasks }}</div><div class="stat-label">Completed</div></div><div class="stat-icon bg-green"><i class="bi bi-check-circle"></i></div></div></div></div>
+    <div class="col-md-3"><div class="stat-card red"><div class="d-flex justify-content-between"><div><div class="stat-value">{{ overdue_tasks }}</div><div class="stat-label">Overdue</div></div><div class="stat-icon bg-red"><i class="bi bi-exclamation-triangle"></i></div></div></div></div>
+    <div class="col-md-3"><div class="stat-card purple"><div class="d-flex justify-content-between"><div><div class="stat-value">{{ project.completion_percentage }}%</div><div class="stat-label">Progress</div></div><div class="stat-icon bg-purple"><i class="bi bi-pie-chart"></i></div></div></div></div>
+</div>
+<!-- Project Details -->
+<div class="row g-4 mb-4"><div class="col-lg-6"><div class="detail-card">
+<h5 class="mb-3">Project Details</h5>
+<div class="detail-row"><span class="detail-label">Client</span><span class="detail-value">{{ project.client_name|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">{{ project.department|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Manager</span><span class="detail-value">{{ project.manager.get_full_name|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Dates</span><span class="detail-value">{{ project.start_date|date:"M d, Y" }} → {{ project.end_date|date:"M d, Y"|default:"Ongoing" }}</span></div>
+<div class="detail-row"><span class="detail-label">Budget</span><span class="detail-value">₹{{ project.budget }}</span></div>
+<div class="detail-row"><span class="detail-label">Priority</span><span class="detail-value"><span class="badge-status badge-{{ project.priority }}">{{ project.get_priority_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ project.status }}">{{ project.get_status_display }}</span></span></div>
+{% if project.description %}<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">{{ project.description }}</span></div>{% endif %}
+</div></div>
+<!-- Tasks -->
+<div class="col-lg-6"><div class="table-card"><div class="card-header d-flex justify-content-between"><span>Tasks</span><a href="{% url 'tpm:task_create' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Add</a></div>
+<div class="table-responsive"><table class="table"><thead><tr><th>Task</th><th>Assigned</th><th>Due</th><th>Status</th></tr></thead><tbody>
+{% for t in tasks %}<tr><td><a href="{% url 'tpm:task_detail' t.pk %}">{{ t.title|truncatewords:6 }}</a></td><td>{{ t.assigned_to.get_full_name|default:"—" }}</td><td>{{ t.due_date|date:"M d"|default:"—" }}</td><td><span class="badge-status badge-{{ t.status }}">{{ t.get_status_display }}</span></td></tr>
+{% empty %}<tr><td colspan="4" class="text-center text-muted">No tasks</td></tr>{% endfor %}
+</tbody></table></div></div></div></div>
+<!-- Milestones, Risks, Issues -->
+<div class="row g-4"><div class="col-lg-4"><div class="table-card"><div class="card-header">Milestones</div><div class="table-responsive"><table class="table"><thead><tr><th>Milestone</th><th>Due</th><th>%</th></tr></thead><tbody>
+{% for ms in milestones %}<tr><td>{{ ms.title }}</td><td>{{ ms.due_date|date:"M d" }}</td><td>{{ ms.completion_percentage }}%</td></tr>{% empty %}<tr><td colspan="3" class="text-center text-muted">None</td></tr>{% endfor %}
+</tbody></table></div></div></div>
+<div class="col-lg-4"><div class="table-card"><div class="card-header">Active Risks</div><div class="table-responsive"><table class="table"><thead><tr><th>Risk</th><th>Severity</th></tr></thead><tbody>
+{% for r in risks %}<tr><td>{{ r.title }}</td><td><span class="badge-status badge-{{ r.severity }}">{{ r.get_severity_display }}</span></td></tr>{% empty %}<tr><td colspan="2" class="text-center text-muted">None</td></tr>{% endfor %}
+</tbody></table></div></div></div>
+<div class="col-lg-4"><div class="table-card"><div class="card-header">Open Issues</div><div class="table-responsive"><table class="table"><thead><tr><th>Issue</th><th>Criticality</th></tr></thead><tbody>
+{% for i in issues %}<tr><td>{{ i.title }}</td><td><span class="badge-status badge-{{ i.criticality }}">{{ i.get_criticality_display }}</span></td></tr>{% empty %}<tr><td colspan="2" class="text-center text-muted">None</td></tr>{% endfor %}
+</tbody></table></div></div></div></div>{% endblock %}

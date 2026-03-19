@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% block title %}{{ training.title }}{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'hr:training_list' %}">Training</a></li><li class="breadcrumb-item active">{{ training.title }}</li>{% endblock %}{% block content %}
+<div class="page-header"><h1>{{ training.title }}</h1><a href="{% url 'hr:training_edit' training.pk %}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Edit</a></div>
+<div class="row g-4"><div class="col-lg-6"><div class="detail-card">
+<div class="detail-row"><span class="detail-label">Trainer</span><span class="detail-value">{{ training.trainer }}</span></div>
+<div class="detail-row"><span class="detail-label">Dates</span><span class="detail-value">{{ training.start_date|date:"M d, Y" }} - {{ training.end_date|date:"M d, Y" }}</span></div>
+<div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">{{ training.location|default:"—" }}</span></div>
+<div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">{{ training.department|default:"All" }}</span></div>
+<div class="detail-row"><span class="detail-label">Max Participants</span><span class="detail-value">{{ training.max_participants }}</span></div>
+<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ training.status }}">{{ training.get_status_display }}</span></span></div>
+{% if training.description %}<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">{{ training.description }}</span></div>{% endif %}
+</div></div>
+<div class="col-lg-6"><div class="table-card"><div class="card-header d-flex justify-content-between"><span>Assigned Employees ({{ assignments.count }})</span><a href="{% url 'hr:training_assign' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Assign</a></div>
+<div class="table-responsive"><table class="table"><thead><tr><th>Employee</th><th>Status</th><th>Score</th></tr></thead><tbody>
+{% for a in assignments %}<tr><td>{{ a.employee.get_full_name }}</td><td><span class="badge-status badge-{{ a.status }}">{{ a.get_status_display }}</span></td><td>{{ a.score|default:"—" }}</td></tr>
+{% empty %}<tr><td colspan="3" class="text-center text-muted">No assignments</td></tr>{% endfor %}
+</tbody></table></div></div></div></div>{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}My Profile | ERP{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Profile Sidebar -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body py-5">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle mb-3 border border-3 border-light shadow-sm" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-light d-inline-flex justify-content-center align-items-center text-secondary mb-3 border border-3 border-white shadow-sm" style="width: 150px; height: 150px;">
+                            <i class="bi bi-person-fill" style="font-size: 5rem;"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <h4 class="card-title mb-1">{{ request.user.get_full_name|default:request.user.username }}</h4>
+                    <p class="text-muted mb-2">{{ profile.designation|default:"Employee" }}</p>
+                    <span class="badge bg-primary rounded-pill mb-3 px-3 py-2">{{ profile.department.name|default:"Unassigned Department" }}</span>
+                    
+                    <ul class="list-group list-group-flush text-start mt-4">
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span>
+                            <span class="fw-medium">{{ request.user.email }}</span>
+                        </li>
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-muted"><i class="bi bi-telephone me-2"></i>Phone</span>
+                            <span class="fw-medium">{{ profile.phone|default:"-" }}</span>
+                        </li>
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <span class="text-muted"><i class="bi bi-person-badge me-2"></i>Emp ID</span>
+                            <span class="fw-medium">{{ profile.employee_id|default:"-" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Details -->
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Employment Information</h5>
+                    <a href="{% url 'accounts:profile' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i> Edit Details</a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted">Reporting Manager</div>
+                        <div class="col-sm-8 fw-medium">
+                            {% if profile.reporting_manager %}
+                                {{ profile.reporting_manager.get_full_name }} ({{ profile.reporting_manager.email }})
+                            {% else %}
+                                Not Assigned
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted">Role</div>
+                        <div class="col-sm-8 fw-medium">{{ profile.role.get_name_display|default:"Employee" }}</div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted">Date of Joining</div>
+                        <div class="col-sm-8 fw-medium">{{ profile.date_of_joining|date:"MMMM d, Y"|default:"-" }}</div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted">Account Status</div>
+                        <div class="col-sm-8 fw-medium">
+                            <span class="badge bg-{{ profile.status|yesno:'success,secondary' }} text-capitalize">{{ profile.status }}</span>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <h5 class="mb-3 mt-4">Personal Address</h5>
+                    <p class="text-muted mb-0">{{ profile.address|default:"No address set."|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

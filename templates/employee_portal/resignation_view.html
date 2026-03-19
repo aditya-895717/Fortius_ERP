@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Resignation Status | ERP{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Exit & Resignation Details</h2>
+    
+    {% if resignation %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Current Status: 
+                        {% if resignation.status == 'initiated' %}
+                            <span class="badge bg-warning text-dark">Review Pending</span>
+                        {% elif resignation.status == 'notice_period' %}
+                            <span class="badge bg-info text-dark">Serving Notice Period</span>
+                        {% elif resignation.status == 'completed' %}
+                            <span class="badge bg-success">Completed</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ resignation.get_status_display }}</span>
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Submission Date</strong>
+                            <span>{{ resignation.created_at|date:"M d, Y" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Official Resignation Date</strong>
+                            <span>{{ resignation.resignation_date|date:"M d, Y" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Reason Provided</strong>
+                            <span>{{ resignation.get_reason_display }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Notice Period</strong>
+                            <span>{{ resignation.notice_period_days }} Days</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Last Working Day (Expected/Final)</strong>
+                            <span>{{ resignation.last_working_day|default:"To be determined by HR"|date:"M d, Y" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Full & Final Settlement Status</strong>
+                            <span>{{ resignation.full_final_status }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            {% if resignation.exit_interview_date %}
+            <div class="alert alert-info shadow-sm">
+                <h5 class="alert-heading"><i class="bi bi-calendar-event"></i> Exit Interview Scheduled</h5>
+                <p class="mb-0">Your exit interview is scheduled for <strong>{{ resignation.exit_interview_date|date:"F d, Y" }}</strong>. HR will reach out with more details.</p>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm text-bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Next Steps</h5>
+                    <ol class="small ps-3">
+                        <li class="mb-2">HR Review & Approval</li>
+                        <li class="mb-2">Notice Period Commences</li>
+                        <li class="mb-2">Knowledge Handover</li>
+                        <li class="mb-2">Clearance from Departments (IT, Finance)</li>
+                        <li class="mb-2">Exit Interview</li>
+                        <li>Full & Final Settlement</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <h5>No active resignation records found.</h5>
+        <p>If you intend to submit your resignation, please proceed to the submission form.</p>
+        <a href="{% url 'employee_portal:resignation_submit' %}" class="btn btn-warning mt-2 text-dark fw-bold">Initiate Resignation</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

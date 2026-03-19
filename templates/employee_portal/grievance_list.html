@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}My Grievances | ERP{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Grievances & Complaints</h2>
+        <a href="{% url 'employee_portal:grievance_submit' %}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> File Grievance</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Subject</th>
+                            <th>Filed On</th>
+                            <th>Status</th>
+                            <th>Resolution Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grievance in grievances %}
+                        <tr>
+                            <td>#{{ grievance.id }}</td>
+                            <td>{{ grievance.get_category_display }}</td>
+                            <td>{{ grievance.subject }}</td>
+                            <td>{{ grievance.filed_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if grievance.status == 'open' %}
+                                    <span class="badge bg-danger">Open</span>
+                                {% elif grievance.status == 'in_progress' %}
+                                    <span class="badge bg-warning text-dark">In Progress</span>
+                                {% elif grievance.status == 'resolved' %}
+                                    <span class="badge bg-success">Resolved</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ grievance.resolved_date|date:"M d, Y"|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">You have no grievance records.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% block title %}Grievance{% endblock %}{% block breadcrumb %}<li class="breadcrumb-item"><a href="{% url 'hr:grievance_list' %}">Grievances</a></li><li class="breadcrumb-item active">Detail</li>{% endblock %}{% block content %}
+<div class="page-header"><h1>{{ grievance.subject }}</h1></div>
+<div class="row g-4"><div class="col-lg-6"><div class="detail-card">
+<div class="detail-row"><span class="detail-label">Employee</span><span class="detail-value">{{ grievance.employee.get_full_name }}</span></div>
+<div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">{{ grievance.get_category_display }}</span></div>
+<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value">{{ grievance.description }}</span></div>
+<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge-status badge-{{ grievance.status }}">{{ grievance.get_status_display }}</span></span></div>
+<div class="detail-row"><span class="detail-label">Filed</span><span class="detail-value">{{ grievance.filed_date|date:"M d, Y" }}</span></div>
+{% if grievance.assigned_to %}<div class="detail-row"><span class="detail-label">Assigned To</span><span class="detail-value">{{ grievance.assigned_to.get_full_name }}</span></div>{% endif %}
+{% if grievance.resolution %}<div class="detail-row"><span class="detail-label">Resolution</span><span class="detail-value">{{ grievance.resolution }}</span></div>{% endif %}
+</div></div>
+<div class="col-lg-6"><div class="form-card"><h5 class="mb-3">Update Grievance</h5>
+<form method="post">{% csrf_token %}
+{% for field in update_form %}<div class="mb-3"><label class="form-label">{{ field.label }}</label>{{ field }}{% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>{% endfor %}
+<button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Update</button>
+</form></div></div></div>{% endblock %}

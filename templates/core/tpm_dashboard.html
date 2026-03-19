@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}TPM Dashboard{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">TPM Dashboard</li>{% endblock %}
+{% block content %}
+<div class="page-header"><h1><i class="bi bi-kanban me-2"></i>TPM Dashboard</h1></div>
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6"><div class="stat-card blue"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ active_projects }}</div><div class="stat-label">Active Projects</div></div><div class="stat-icon bg-blue"><i class="bi bi-kanban"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card green"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ completed_projects }}</div><div class="stat-label">Completed</div></div><div class="stat-icon bg-green"><i class="bi bi-check-circle"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card red"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ overdue_tasks }}</div><div class="stat-label">Overdue Tasks</div></div><div class="stat-icon bg-red"><i class="bi bi-exclamation-triangle"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card orange"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ tasks_due_this_week }}</div><div class="stat-label">Due This Week</div></div><div class="stat-icon bg-orange"><i class="bi bi-clock"></i></div></div></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6"><div class="stat-card purple"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ total_projects }}</div><div class="stat-label">Total Projects</div></div><div class="stat-icon bg-purple"><i class="bi bi-folder"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card teal"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ total_tasks }}</div><div class="stat-label">Total Tasks</div></div><div class="stat-icon bg-teal"><i class="bi bi-check2-square"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card yellow"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ high_risks }}</div><div class="stat-label">High Risks</div></div><div class="stat-icon bg-red"><i class="bi bi-shield-exclamation"></i></div></div></div></div>
+    <div class="col-xl-3 col-md-6"><div class="stat-card indigo"><div class="d-flex justify-content-between align-items-start"><div><div class="stat-value">{{ open_issues }}</div><div class="stat-label">Open Issues</div></div><div class="stat-icon bg-blue"><i class="bi bi-bug"></i></div></div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="table-card">
+            <div class="card-header d-flex justify-content-between"><span>Recent Projects</span><a href="{% url 'tpm:project_list' %}" class="btn btn-sm btn-outline-primary">View All</a></div>
+            <div class="table-responsive"><table class="table"><thead><tr><th>Code</th><th>Name</th><th>Status</th><th>Progress</th></tr></thead><tbody>
+            {% for p in recent_projects %}
+            <tr>
+                <td><strong>{{ p.project_code }}</strong></td>
+                <td><a href="{% url 'tpm:project_detail' p.pk %}">{{ p.name }}</a></td>
+                <td><span class="badge-status badge-{{ p.status }}">{{ p.get_status_display }}</span></td>
+                <td>
+                    <div class="progress" style="height:6px;width:80px;"><div class="progress-bar" style="width:{{ p.completion_percentage }}%"></div></div>
+                    <small class="text-muted">{{ p.completion_percentage }}%</small>
+                </td>
+            </tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted">No projects yet</td></tr>
+            {% endfor %}
+            </tbody></table></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="table-card">
+            <div class="card-header d-flex justify-content-between"><span>Upcoming Milestones</span><a href="{% url 'tpm:milestone_list' %}" class="btn btn-sm btn-outline-primary">View All</a></div>
+            <div class="table-responsive"><table class="table"><thead><tr><th>Milestone</th><th>Project</th><th>Due Date</th><th>Completion</th></tr></thead><tbody>
+            {% for ms in upcoming_milestones %}
+            <tr>
+                <td>{{ ms.title }}</td>
+                <td>{{ ms.project.name }}</td>
+                <td>{{ ms.due_date|date:"M d, Y" }}</td>
+                <td><div class="progress" style="height:6px;width:80px;"><div class="progress-bar" style="width:{{ ms.completion_percentage }}%"></div></div><small>{{ ms.completion_percentage }}%</small></td>
+            </tr>
+            {% empty %}<tr><td colspan="4" class="text-center text-muted">No upcoming milestones</td></tr>
+            {% endfor %}
+            </tbody></table></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
