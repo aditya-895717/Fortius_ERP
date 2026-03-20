@@ -22,11 +22,13 @@
         <!-- Sidebar Overlay (mobile) -->
         <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-        <!-- Sidebar -->
-        {% include 'partials/_sidebar.html' %}
+        <!-- Wrapper for Sidebar and Main Content -->
+        <div class="wrapper d-flex align-items-stretch w-100">
+            <!-- Sidebar -->
+            {% include 'partials/_sidebar.html' %}
 
-        <!-- Main Content Area -->
-        <div class="main-content">
+            <!-- Main Content Area -->
+            <div class="main-content flex-grow-1">
             <!-- Top Navbar -->
             {% include 'partials/_navbar.html' %}
 
@@ -40,6 +42,7 @@
 
             <!-- Footer -->
             {% include 'partials/_footer.html' %}
+            </div>
         </div>
     {% else %}
         {% include 'partials/_alerts.html' %}
