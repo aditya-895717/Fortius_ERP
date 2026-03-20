@@ -8,9 +8,9 @@ build/
 *.egg
 
 # Django
-db.sqlite3
+
 *.log
-media/
+
 
 # Environment
 .env
